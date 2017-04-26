@@ -113,11 +113,11 @@ function removeListener (eventName, el) {
  * @parent can-infrastructure
  *
  * A custom event for listening to changes of inputs with type "radio",
- * which fires when a conflicting radio input changes. A "conflicting" radio button
- * has the same "name" attribute and exists within in the same form, or lack thereof.
- * This event is used to coordinate state when it is bound to whether a radio is
- * checked. The "change" event does not fire when radios are deselected. By using
- * this event instead, radios which are deselected will be notified.
+ * which fires when a conflicting radio input changes. A "conflicting"
+ * radio button has the same "name" attribute and exists within in the
+ * same form, or lack thereof. This event coordinates state bound to
+ * whether a radio is checked. The "change" event does not fire for deselected
+ * radios. By using this event instead, deselected radios receive notification.
  *
  * ```js
  * var events = require("can-util/dom/events/events");
