@@ -8,10 +8,12 @@ function fixture () {
 	return document.getElementById("qunit-fixture");
 }
 
+var oldAddEventListener = domEvents.addEventListener;
+var oldRemoveEventListener = domEvents.removeEventListener;
+
 QUnit = require('steal-qunit');
 QUnit.module('can-event-radiochange', {
 	setup: function () {
-		var old = domEvents.addEventListener;
 		domEvents.addEventListener = function (eventName) {
 			if (eventName === radioChange.eventName) {
 				radioChange.addEventListener.apply(this, arguments);
@@ -19,12 +21,8 @@ QUnit.module('can-event-radiochange', {
 					return;
 				}
 			}
-			return old.apply(this, arguments);
+			return oldAddEventListener.apply(this, arguments);
 		};
-		// domEvents.addCustomEvent(radioChange);
-	},
-	teardown: function () {
-		var old = domEvents.removeEventListener;
 		domEvents.removeEventListener = function (eventName) {
 			if (eventName === radioChange.eventName) {
 				radioChange.removeEventListener.apply(this, arguments);
@@ -32,8 +30,13 @@ QUnit.module('can-event-radiochange', {
 					return;
 				}
 			}
-			return old.apply(this, arguments);
+			return oldRemoveEventListener.apply(this, arguments);
 		};
+		// domEvents.addCustomEvent(radioChange);
+	},
+	teardown: function () {
+		domEvents.addEventListener = oldAddEventListener;
+		domEvents.removeEventListener = oldRemoveEventListener;
 		// domEvents.removeCustomEvent(radioChange);
 	}
 });
