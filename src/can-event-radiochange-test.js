@@ -1,82 +1,70 @@
 'use strict';
 
-var radioChange = require('./can-event-radiochange');
+QUnit = require('steal-qunit');
 var domEvents = require('can-util/dom/events/');
 var domDispatch = require('can-util/dom/dispatch/');
+
+var override = require('./override');
 
 function fixture () {
 	return document.getElementById("qunit-fixture");
 }
 
-var oldAddEventListener = domEvents.addEventListener;
-var oldRemoveEventListener = domEvents.removeEventListener;
-
-QUnit = require('steal-qunit');
-QUnit.module('can-event-radiochange', {
+var overrideStrategy = {
+	name: 'override()',
 	setup: function () {
-		domEvents.addEventListener = function (eventName) {
-			if (eventName === radioChange.eventName) {
-				radioChange.addEventListener.apply(this, arguments);
-				if (!radioChange.applyEventListener) {
-					return;
-				}
-			}
-			return oldAddEventListener.apply(this, arguments);
-		};
-		domEvents.removeEventListener = function (eventName) {
-			if (eventName === radioChange.eventName) {
-				radioChange.removeEventListener.apply(this, arguments);
-				if (!radioChange.applyEventListener) {
-					return;
-				}
-			}
-			return oldRemoveEventListener.apply(this, arguments);
-		};
-		// domEvents.addCustomEvent(radioChange);
+		this.removeOverride = override.override(domEvents);
 	},
 	teardown: function () {
-		domEvents.addEventListener = oldAddEventListener;
-		domEvents.removeEventListener = oldRemoveEventListener;
-		// domEvents.removeCustomEvent(radioChange);
+		this.removeOverride();
 	}
-});
+};
 
-test("subscription to an untracked radio should call listener", function () {
-	expect(1);
-	var listener = document.createElement('input');
-	listener.id = 'listener';
-	listener.type = 'radio';
-	listener.name = 'myfield';
-	domEvents.addEventListener.call(listener, 'radiochange', function handler () {
-		ok(true, 'called from other element');
-		domEvents.removeEventListener.call(listener, 'radiochange', handler);
+function runTests (mod) {
+	QUnit.module(mod.name, {
+		setup: mod.setup,
+		teardown: mod.teardown
 	});
 
-	var radio = document.createElement('input');
-	radio.id = 'radio';
-	radio.type = 'radio';
-	radio.name = 'myfield';
+	test("subscription to an untracked radio should call listener", function () {
+		expect(1);
+		var listener = document.createElement('input');
+		listener.id = 'listener';
+		listener.type = 'radio';
+		listener.name = 'myfield';
+		domEvents.addEventListener.call(listener, 'radiochange', function handler () {
+			ok(true, 'called from other element');
+			domEvents.removeEventListener.call(listener, 'radiochange', handler);
+		});
 
-	fixture().appendChild(listener);
-	fixture().appendChild(radio);
+		var radio = document.createElement('input');
+		radio.id = 'radio';
+		radio.type = 'radio';
+		radio.name = 'myfield';
 
-	radio.setAttribute('checked', 'checked');
-	domDispatch.call(radio, 'change');
-});
+		fixture().appendChild(listener);
+		fixture().appendChild(radio);
 
-test("subscription to a tracked radio should call itself", function () {
-	expect(1);
-	var radio = document.createElement('input');
-	radio.id = 'selfish';
-	radio.type = 'radio';
-	radio.name = 'anynamejustsothereisaname';
-	domEvents.addEventListener.call(radio, 'radiochange', function handler () {
-		ok(true, 'called from self');
-		domEvents.removeEventListener.call(radio, 'radiochange', handler);
+		radio.setAttribute('checked', 'checked');
+		domDispatch.call(radio, 'change');
 	});
 
-	fixture().appendChild(radio);
+	test("subscription to a tracked radio should call itself", function () {
+		expect(1);
+		var radio = document.createElement('input');
+		radio.id = 'selfish';
+		radio.type = 'radio';
+		radio.name = 'anynamejustsothereisaname';
+		domEvents.addEventListener.call(radio, 'radiochange', function handler () {
+			ok(true, 'called from self');
+			domEvents.removeEventListener.call(radio, 'radiochange', handler);
+		});
 
-	radio.setAttribute('checked', 'checked');
-	domDispatch.call(radio, 'change');
-});
+		fixture().appendChild(radio);
+
+		radio.setAttribute('checked', 'checked');
+		domDispatch.call(radio, 'change');
+	});
+}
+
+runTests(overrideStrategy);
