@@ -58,7 +58,7 @@
     "testee": "testee test.html --browsers firefox",
     "version": "git commit -am \"Update version number\" && git checkout -b release && git add -f dist/"
   },
-  "steal": {
+  "system": {
     "main": "can-event-radiochange",
     "configDependencies": [
       "live-reload"
