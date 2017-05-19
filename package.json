@@ -7,16 +7,6 @@
     "email": "core@donejs.com",
     "url": "https://bitovi.com"
   },
-  "browser": {
-    "transform": [
-      "cssify"
-    ]
-  },
-  "browserify": {
-    "transform": [
-      "cssify"
-    ]
-  },
   "bugs": {
     "url": "https://github.com/canjs/can-event-radiochange/issues"
   },
