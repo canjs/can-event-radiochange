@@ -1,7 +1,7 @@
 {
   "name": "can-event-radiochange",
   "description": "The custom \"radiochange\" event",
-  "version": "0.1.1",
+  "version": "0.2.0-pre.0",
   "author": {
     "name": "Bitovi",
     "email": "core@donejs.com",
