@@ -11,7 +11,7 @@
     "url": "https://github.com/canjs/can-event-radiochange/issues"
   },
   "devDependencies": {
-    "can-util": "^3.4.1",
+    "can-util": "^3.9.0-pre.5",
     "done-serve": "^1.0.0",
     "donejs-cli": "^1.0.0",
     "fixpack": "^2.3.1",
@@ -39,11 +39,12 @@
     "develop": "done-serve --static --develop --port 8080",
     "jshint": "jshint ./*.js ./src/ --config",
     "lint": "fixpack && npm run jshint",
-    "postpublish": "git push --tags && git checkout master && git branch -D release && git push",
+    "postpublish": "git push --tags && git checkout can-reflect && git branch -D release && git push",
     "preversion": "npm test && npm run build",
     "release:major": "npm version major && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:patch": "npm version patch && npm publish",
+    "release:pre": "npm version prerelease && npm publish --tag=pre",
     "test": "npm run lint && npm run testee",
     "testee": "testee test.html --browsers firefox",
     "version": "git commit -am \"Update version number\" && git checkout -b release && git add -f dist/"
