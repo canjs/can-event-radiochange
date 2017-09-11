@@ -29,7 +29,7 @@
     "donejs"
   ],
   "license": "MIT",
-  "main": "dist/cjs/can-event-radiochange",
+  "main": "src/can-event-radiochange",
   "repository": {
     "type": "git",
     "url": "git://github.com/canjs/can-event-radiochange.git"
