@@ -22,18 +22,18 @@ var overrideStrategy = {
 
 function runTests (mod) {
 	QUnit.module(mod.name, {
-		setup: mod.setup,
-		teardown: mod.teardown
+		beforeEach: mod.setup,
+		afterEach: mod.teardown
 	});
 
-	test("subscription to an untracked radio should call listener", function () {
-		expect(1);
+	QUnit.test("subscription to an untracked radio should call listener", function(assert) {
+		assert.expect(1);
 		var listener = document.createElement('input');
 		listener.id = 'listener';
 		listener.type = 'radio';
 		listener.name = 'myfield';
 		domEvents.addEventListener.call(listener, 'radiochange', function handler () {
-			ok(true, 'called from other element');
+			assert.ok(true, 'called from other element');
 			domEvents.removeEventListener.call(listener, 'radiochange', handler);
 		});
 
@@ -49,14 +49,14 @@ function runTests (mod) {
 		domDispatch.call(radio, 'change');
 	});
 
-	test("subscription to a tracked radio should call itself", function () {
-		expect(1);
+	QUnit.test("subscription to a tracked radio should call itself", function(assert) {
+		assert.expect(1);
 		var radio = document.createElement('input');
 		radio.id = 'selfish';
 		radio.type = 'radio';
 		radio.name = 'anynamejustsothereisaname';
 		domEvents.addEventListener.call(radio, 'radiochange', function handler () {
-			ok(true, 'called from self');
+			assert.ok(true, 'called from self');
 			domEvents.removeEventListener.call(radio, 'radiochange', handler);
 		});
 
